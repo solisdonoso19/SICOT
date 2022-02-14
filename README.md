@@ -1,2 +1,0 @@
-# SICOT
-Sistema cotizador automatizado
