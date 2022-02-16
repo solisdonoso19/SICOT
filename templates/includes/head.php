@@ -16,4 +16,5 @@
     <link rel="stylesheet" href="<?php echo JS . 'waitMe.min.css'; ?>">
     <title><?php echo APP_NAME; ?></title>
 </head>
+
 <body>

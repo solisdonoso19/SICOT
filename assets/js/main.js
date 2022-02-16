@@ -28,6 +28,10 @@ $("document").ready(() => {
   function get_quote() {
     let wrapper = $(".wrapper_quote"),
       action = "get_quote_res",
+      vendedor = $('#vendedor'),
+      email_vendedor = $('#email_vendedor'),
+      division     = $('#division'),
+      telefono_vendedor = $('#telefono_vendedor'),
       cliente = $("#cliente"),
       empresa = $("#empresa"),
       email = $("#email"),
@@ -47,6 +51,10 @@ $("document").ready(() => {
     })
       .done((res) => {
         if (res.status === 200) {
+          vendedor.val(res.data.quote.vendedor);
+          email_vendedor.val(res.data.quote.email_vendedor);
+          division.val(res.data.quote.division);
+          telefono_vendedor.val(res.data.quote.telefono_vendedor);
           cliente.val(res.data.quote.cliente);
           empresa.val(res.data.quote.empresa);
           email.val(res.data.quote.email);
@@ -55,6 +63,10 @@ $("document").ready(() => {
           telefono.val(res.data.quote.telefono);
           wrapper.html(res.data.html);
         } else {
+          vendedor.val("");
+          email_vendedor.val("");
+          division.val("");
+          telefono_vendedor.val("");
           cliente.val("");
           empresa.val("");
           email.val("");
@@ -147,9 +159,9 @@ $("document").ready(() => {
 
     let button = $(this),
       action = "restart_quote";
-      download = $('download_quote');
-      generate = $('generate_quote');
-      default_text = 'Generar Cotización';
+    download = $("download_quote");
+    generate = $("generate_quote");
+    default_text = "Generar Cotización";
 
     if (!confirm("Estas seguro que quieres reiniciar?")) return false;
 
@@ -162,7 +174,7 @@ $("document").ready(() => {
       .done((res) => {
         if (res.status === 200) {
           download.fadeOut();
-          download.attr('href', '');
+          download.attr("href", "");
           generate.html(default_text);
           notify(res.msg);
           get_quote();
@@ -334,18 +346,22 @@ $("document").ready(() => {
     e.preventDefault();
 
     let button = $(this),
-      default_text = button.html(), // "Generar"
-      new_text = "Volver a generar",
-      download = $("#download_quote"),
-      send = $("#send_quote"),
-      cliente = $("#cliente").val(),
-      empresa = $("#empresa").val(),
-      email = $("#email").val(),
-      telefono = $("#telefono").val(),
-      tiempo_entrega = $("#tiempo_entrega").val(),
-      forma_pago = $("#forma_pago").val(),
-      action = "generate_quote",
-      errors = 0;
+      default_text      = button.html(), // "Generar"
+      new_text          = "Volver a generar",
+      download          = $("#download_quote"),
+      send              = $("#send_quote"),
+      vendedor          = $('#vendedor').val(),
+      email_vendedor    = $('#email_vendedor').val(),
+      division          = $('#division').val(),
+      telefono_vendedor = $('#telefono_vendedor').val(),
+      cliente           = $("#cliente").val(),
+      empresa           = $("#empresa").val(),
+      email             = $("#email").val(),
+      telefono          = $("#telefono").val(),
+      tiempo_entrega    = $("#tiempo_entrega").val(),
+      forma_pago        = $("#forma_pago").val(),
+      action            = "generate_quote",
+      errors            = 0;
 
     // Validando la acción
     if (!confirm("¿Estás seguro?")) return false;
@@ -387,6 +403,10 @@ $("document").ready(() => {
       cache: false,
       data: {
         action,
+        vendedor,
+        email_vendedor,
+        telefono_vendedor,
+        division,
         cliente,
         empresa,
         email,

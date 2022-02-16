@@ -80,7 +80,9 @@ require_once 'app/config.php' ?>
                                         <td align="left"><strong>Fecha</strong></td>
                                         <td align="left">: <?php echo date('d-m-y') ?></td>
                                     </tr>
-                                    <tr><td><br></td></tr>
+                                    <tr>
+                                        <td><br></td>
+                                    </tr>
                                     <tr>
                                         <td align="left"><strong>Vendedor</strong></td>
                                         <td align="left">: Carlos Solis</td>

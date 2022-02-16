@@ -54,9 +54,10 @@
 </head>
 
 <body>
-    <div class="contenedor">
+    <div class="contenedor" style="text-align: center;">
         <!-- //? Cabezera -->
-        <h2 style="text-align:center; padding: 0; margin: 0;"><strong>DISCOVERY CENTER</strong></h2>
+        <img src="<?php echo IMG . 'logo.png' ?>" alt="" style="margin-left: center; margin-right: auto; width: 100px; height: 70px;">
+        <h4 style="text-align:center; padding: 0; margin: 0;"><strong><?php echo $d->division ?></strong></h4>
         <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;" ; padding: 0; margin: 0;>R.U.C 1719593-690057 D.V. 59</p>
         <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;">Ricardi J. Alfaro</p>
         <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;">Teléfono: 294-6252</p>
@@ -82,15 +83,15 @@
                                     </tr>
                                     <tr>
                                         <td align="left"><strong>Vendedor</strong></td>
-                                        <td align="left">: Carlos Solis</td>
+                                        <td align="left">: <?php echo $d->vendedor ?></td>
                                     </tr>
                                     <tr>
                                         <td align="left"><strong>Email</strong></td>
-                                        <td align="left">: solisdonoso@gmail.com</td>
+                                        <td align="left">: <?php echo $d->email_vendedor ?></td>
                                     </tr>
                                     <tr>
                                         <td align="left"><strong>Telefono</strong></td>
-                                        <td align="left">: 4565-5456</td>
+                                        <td align="left">: <?php echo $d->telefono_vendedor ?></td>
                                     </tr>
                                 </table>
                             </td>
@@ -116,16 +117,16 @@
                                     </tr>
                                     <tr>
                                         <td align="left"><strong>Telefono</strong></td>
-                                        <td align="left">: <?php echo $d->telefono?></td>
+                                        <td align="left">: <?php echo $d->telefono ?></td>
                                     </tr>
                                     <br>
                                     <tr>
                                         <td align="left"><strong>Tiempo de Entrega</strong></td>
-                                        <td align="left">: <?php echo $d->tiempo_entrega?></td>
+                                        <td align="left">: <?php echo $d->tiempo_entrega ?></td>
                                     </tr>
                                     <tr>
                                         <td align="left"><strong>Forma de Pago</strong></td>
-                                        <td align="left">: <?php echo $d->forma_pago?></td>
+                                        <td align="left">: <?php echo $d->forma_pago ?></td>
                                     </tr>
                                 </table>
                             </td>
@@ -155,34 +156,36 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($d->items as $c): ?>
-                <tr>
-                    <td><img src="<?php echo $c->imagen;?>" alt="" style="width: 50px; height: 50px;" ></td>
-                    <th><?php echo ($c->cod_barras);?></th>
-                    <td><?php echo ($c->modelo);?></td>
-                    <td><?php echo ($c->descripcion);?></td>
-                    <td align="center"><?php echo ($c->cantidad);?></td>
-                    <td align="right"><?php echo number_format($c->precio_unitario, 2);?></td>
-                    <td align="right"><?php echo number_format($c->total, 2);?></td>
-                </tr>
-                <?php endforeach;?>
+                <?php foreach ($d->items as $c) : ?>
+                    <tr>
+                        <td><img src="<?php echo $c->imagen; ?>" alt="" style="width: 50px; height: 50px;"></td>
+                        <th><?php echo ($c->cod_barras); ?></th>
+                        <td><?php echo ($c->modelo); ?></td>
+                        <td><?php echo ($c->descripcion); ?></td>
+                        <td align="center"><?php echo ($c->cantidad); ?></td>
+                        <td align="right"><?php echo number_format($c->precio_unitario, 2); ?></td>
+                        <td align="right"><?php echo number_format($c->total, 2); ?></td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan="5"></td>
                     <td align="right">Sub-Total</td>
-                    <td align="right"><?php echo number_format($d->subtotal, 2)?></td>
+                    <td align="right"><?php echo number_format($d->subtotal, 2) ?></td>
                 </tr>
                 <tr>
                     <td colspan="5"></td>
                     <td align="right">I.T.B.M.S</td>
-                    <td align="right"><?php echo number_format($d->tax, 2)?></td>
+                    <td align="right"><?php echo number_format($d->tax, 2) ?></td>
                 </tr>
                 <tr>
                     <td colspan="5"></td>
-                    <td align="right"><h1>Total</h1></td>
+                    <td align="right">
+                        <h1>Total</h1>
+                    </td>
                     <td align="right" class="gray">
-                        <h3 style="margin: 0px 0px; font-size: 25px;"><?php echo number_format($d->total, 2)?></h3>
+                        <h3 style="margin: 0px 0px; font-size: 25px;"><?php echo number_format($d->total, 2) ?></h3>
                     </td>
                 </tr>
                 <tr>

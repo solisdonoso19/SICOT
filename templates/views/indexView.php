@@ -9,10 +9,36 @@
     <div class="row">
         <!-- Client information -->
         <div class="col-lg-6 col-12">
-            <div class="card mb-3">
-                <div class="card-header"><b>Información del Cliente</b></div>
-                <div class="card-body">
-                    <form id="" method="POST">
+            <form id="" method="POST">
+                <div class="card mb-3">
+                    <div class="card-header"><b>Información del Vendedor</b></div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label for="vendedor">Vendedor</label>
+                                <input type="text" class="form-control" id="vendedor" name="vendedor" placeholder="Juan Peréz" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="email_vendedor">E-mail</label>
+                                <input type="text" class="form-control" id="email_vendedor" name="email_vendedor" placeholder="juanperez@gmail.com" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="division">División (escoja una opción)</label>
+                                <select name="division" class="form-select" id="division">
+                                    <option value="SEMFYL S.A.">SEMFYL S.A.</option>
+                                    <option value="DIPSA S.A.">DIPSA S.A.</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="telefono_vendedor">Telefono</label>
+                                <input type="text" class="form-control" id="telefono_vendedor" name="telefono_vendedor" placeholder="8888-8888" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header"><b>Información del Cliente</b></div>
+                    <div class="card-body">
                         <div class="form-group row">
                             <div class="col-6">
                                 <label for="cliente">Cliente</label>
@@ -39,9 +65,9 @@
                                 <input type="text" class="form-control" id="telefono" name="telefono" placeholder="8888-8888" required>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </form>
 
             <!-- Product information -->
             <div class="card">
@@ -75,8 +101,8 @@
                                 </div>
                             </div>
                             <div class="col-4">
-                            <label for="imagen"> Imagen </label>
-                                <input type="text" class="form-control" id="imagen" name="imagen" />
+                                <label for="imagen"> Imagen </label>
+                                <input type="text" class="form-control" id="imagen" name="imagen" placeholder="https://image.com/image" />
                             </div>
                         </div>
                         <br>
@@ -90,50 +116,50 @@
         <div class="col-lg-6 col-12 b-5">
             <!-- Editando producto -->
             <div class="wrapper_update_model" style="display: none;">
-            <div class="card mb-3">
-                <div class="card-header text-danger">           
-                    <b>EDITANDO PRODUCTO</b>
-                </div>
-                <div class="card-body">
-                    <form id="save_model" method="POST">
-                        <input type="hidden" class="form-control" id="id_model" name="id_model" required>
-                        <div class="form-group row">
-                            <div class="col-4">
-                                <label for="cod_barras">Codigo de Barras</label>
-                                <input type="text" class="form-control" id="cod_barras" name="cod_barras" placeholder="80008888" required>
-                            </div>
-                            <div class="col-4">
-                                <label for="modelo">Modelo</label>
-                                <input type="text" class="form-control" id="modelo" name="modelo" placeholder="MDX-5142" required>
-                            </div>
-                            <div class="col-4">
-                                <label for="descripcion">Descripcion</label>
-                                <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Lorem ipsum dolor sit amet..." required>
-                            </div>
-                            <div class="col-4">
-                                <label for="cantidad">Cantidad</label>
-                                <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" max="9999" placeholder="80008888" required>
-                            </div>
-                            <div class="col-4">
-                                <label for="precio_unitario" colspan="3">Precio unitario</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">$</span>
+                <div class="card mb-3">
+                    <div class="card-header text-danger">
+                        <b>EDITANDO PRODUCTO</b>
+                    </div>
+                    <div class="card-body">
+                        <form id="save_model" method="POST">
+                            <input type="hidden" class="form-control" id="id_model" name="id_model" required>
+                            <div class="form-group row">
+                                <div class="col-4">
+                                    <label for="cod_barras">Codigo de Barras</label>
+                                    <input type="text" class="form-control" id="cod_barras" name="cod_barras" placeholder="80008888" required>
+                                </div>
+                                <div class="col-4">
+                                    <label for="modelo">Modelo</label>
+                                    <input type="text" class="form-control" id="modelo" name="modelo" placeholder="MDX-5142" required>
+                                </div>
+                                <div class="col-4">
+                                    <label for="descripcion">Descripcion</label>
+                                    <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Lorem ipsum dolor sit amet..." required>
+                                </div>
+                                <div class="col-4">
+                                    <label for="cantidad">Cantidad</label>
+                                    <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" max="9999" placeholder="80008888" required>
+                                </div>
+                                <div class="col-4">
+                                    <label for="precio_unitario" colspan="3">Precio unitario</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input type="text" class="form-control" id="precio_unitario" name="precio_unitario" placeholder="0.00" required>
                                     </div>
-                                    <input type="text" class="form-control" id="precio_unitario" name="precio_unitario" placeholder="0.00" required>
+                                </div>
+                                <div class="col-4">
+                                    <label for="imagen"> Imagen </label>
+                                    <input type="text" class="form-control" id="imagen" name="imagen" placeholder="https://image.com/image" />
                                 </div>
                             </div>
-                            <div class="col-4">
-                            <label for="imagen"> Imagen </label>
-                                <input type="text" class="form-control" id="imagen" name="imagen" />
-                            </div>
-                        </div>
-                        <br>
-                        <button class="btn btn-success" type="submit">Guardar Cambios</button>
-                        <button class="btn btn-danger" type="reset" id="cancel_edit">Cancelar</button>
-                    </form>
+                            <br>
+                            <button class="btn btn-success" type="submit">Guardar Cambios</button>
+                            <button class="btn btn-danger" type="reset" id="cancel_edit">Cancelar</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="card mt-3 mt-lg-0">
                 <div class="card-header"><b>Resumen De La Cotización</b></div>

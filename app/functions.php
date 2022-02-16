@@ -18,6 +18,10 @@ function get_view($view_name)
 //! new_quote[]
 /**
  * number
+ * vendedor
+ * email vendedor
+ * telefono
+ * vendedor
  * cliente
  * empresa
  * email
@@ -65,6 +69,10 @@ function get_quote()
         return $_SESSION['new_quote'] =
             [
                 'number'         => rand(111111, 999999),
+                'vendedor'       => '',
+                'email_vendedor' => '',
+                'division'         => '',
+                'telefono_vendedor'       => '',
                 'cliente'        => '',
                 'empresa'        => '',
                 'email'          => '',
@@ -83,13 +91,18 @@ function get_quote()
     return $_SESSION['new_quote'];
 }
 
-function set_client($client){
-    $_SESSION['new_quote']['cliente']        = trim($client['cliente']);
-    $_SESSION['new_quote']['empresa']        = trim($client['empresa']);
-    $_SESSION['new_quote']['email']          = trim($client['email']);
-    $_SESSION['new_quote']['telefono']       = trim($client['telefono']);
-    $_SESSION['new_quote']['forma_pago']     = trim($client['forma_pago']);
-    $_SESSION['new_quote']['tiempo_entrega'] = trim($client['tiempo_entrega']);
+function set_client($client)
+{
+    $_SESSION['new_quote']['vendedor']          = trim($client['vendedor']);
+    $_SESSION['new_quote']['email_vendedor']    = trim($client['email_vendedor']);
+    $_SESSION['new_quote']['division']    = trim($client['division']);
+    $_SESSION['new_quote']['telefono_vendedor'] = trim($client['telefono_vendedor']);
+    $_SESSION['new_quote']['cliente']           = trim($client['cliente']);
+    $_SESSION['new_quote']['empresa']           = trim($client['empresa']);
+    $_SESSION['new_quote']['email']             = trim($client['email']);
+    $_SESSION['new_quote']['telefono']          = trim($client['telefono']);
+    $_SESSION['new_quote']['forma_pago']        = trim($client['forma_pago']);
+    $_SESSION['new_quote']['tiempo_entrega']    = trim($client['tiempo_entrega']);
     return true;
 }
 
@@ -131,6 +144,10 @@ function restart_quote()
     $_SESSION['new_quote'] =
         [
             'number'         => rand(111111, 999999),
+            'vendedor'       => '',
+            'email_vendedor' => '',
+            'division' => '',
+            'telefono_vendedor'  => '',
             'cliente'        => '',
             'empresa'        => '',
             'email'          => '',
@@ -373,12 +390,13 @@ function hook_add_to_quote()
     json_output(json_build(201, get_item($item['id']), 'Producto agregado con éxito.'));
 }
 
-function hook_restart_quote(){
- $items = get_items();
+function hook_restart_quote()
+{
+    $items = get_items();
 
-  if(empty($items)) {
-    json_output(json_build(400, null, 'No es necesario reiniciar la cotización, no hay conceptos en ella.'));
-  }
+    if (empty($items)) {
+        json_output(json_build(400, null, 'No es necesario reiniciar la cotización, no hay conceptos en ella.'));
+    }
 
     if (!restart_quote()) {
         json_output(json_build(400, null, 'Hubo un problema al reiniciar la cotización'));
@@ -386,37 +404,40 @@ function hook_restart_quote(){
     json_output(json_build(200, get_quote(), 'La cotización se ha reiniciado con exito!'));
 }
 
-function hook_delete_model(){
-    if(!isset($_POST['id'])) {
+function hook_delete_model()
+{
+    if (!isset($_POST['id'])) {
         json_output(json_build(403, null, 'Parametros incompletos.'));
     }
 
-    if(!delete_item((int) $_POST['id'])){
+    if (!delete_item((int) $_POST['id'])) {
         json_output(json_build(400, null, 'Hubo un problema al borrar el concepto'));
     }
 
     json_output(json_build(200, get_quote(), 'Concepto borrado con exito,'));
 }
 
-function hook_edit_model() {
-    if(!isset($_POST['id'])) {
-      json_output(json_build(403, null, 'Parametros incompletos.'));
+function hook_edit_model()
+{
+    if (!isset($_POST['id'])) {
+        json_output(json_build(403, null, 'Parametros incompletos.'));
     }
-  
-    if(!$item = get_item((int) $_POST['id'])) {
-      json_output(json_build(400, null, 'Hubo un problema al cargar el concepto.'));
-    }
-  
-    json_output(json_build(200, $item, 'producto cargado con éxito.'));
-  }
 
-  //* Guardar los cambios de un concepto
-function hook_save_model() {
+    if (!$item = get_item((int) $_POST['id'])) {
+        json_output(json_build(400, null, 'Hubo un problema al cargar el concepto.'));
+    }
+
+    json_output(json_build(200, $item, 'producto cargado con éxito.'));
+}
+
+//* Guardar los cambios de un concepto
+function hook_save_model()
+{
 
     if (!isset($_POST['cod_barras'], $_POST['id_model'], $_POST['modelo'], $_POST['descripcion'], $_POST['cantidad'], $_POST['precio_unitario'])) {
         json_output(json_build(403, null, 'Parametros incompletos.'));
     }
-    
+
     $id                 = (int) $_POST['id_model'];
     $cod_barras         = (int)($_POST['cod_barras']);
     $modelo             = trim($_POST['modelo']);
@@ -435,36 +456,41 @@ function hook_save_model() {
             'descripcion'        => $descripcion,
             'cantidad'           => $cantidad,
             'precio_unitario'    => $precio_unitario,
-            'imagen'               => $imagen,
+            'imagen'             => $imagen,
             'tax'                => $tax,
             'total'              => $subtotal
         ];
-  
-    if(!add_item($item)) {
-      json_output(json_build(400, null, 'Hubo un problema al guardar los cambios del concepto.'));
-    }
-  
-    json_output(json_build(200, get_item($id), 'Cambios guardados con éxito.'));
-  }
 
-function hook_generate_quote(){
+    if (!add_item($item)) {
+        json_output(json_build(400, null, 'Hubo un problema al guardar los cambios del concepto.'));
+    }
+
+    json_output(json_build(200, get_item($id), 'Cambios guardados con éxito.'));
+}
+
+function hook_generate_quote()
+{
     //*Validar
-    if (!isset($_POST['cliente'], $_POST['empresa'], $_POST['email'], $_POST['telefono'], $_POST['tiempo_entrega'], $_POST['forma_pago'])) {
+    if (!isset($_POST['vendedor'] ,$_POST['email_vendedor'], $_POST['division'], $_POST['telefono_vendedor'], $_POST['cliente'], $_POST['empresa'], $_POST['email'], $_POST['telefono'], $_POST['tiempo_entrega'], $_POST['forma_pago'])) {
         json_output(json_build(400, null, 'Parametros incompletos'));
     }
     //* Validar correo
-    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        json_output(json_build(400, null, 'Dirección de correo no valida'));
+    if ((!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) && (!filter_var($_POST['vendedor_email'], FILTER_VALIDATE_EMAIL))) {
+        json_output(json_build(400, null, 'Dirección de correo no valida, Revise que esten bien escritos'));
     }
 
     //* Guardar informacion del cliente
     $client = [
-        'cliente' => $_POST ['cliente'],
-        'empresa' => $_POST ['empresa'],
-        'email' => $_POST ['email'],
-        'telefono' => $_POST ['telefono'],
-        'tiempo_entrega' => $_POST ['tiempo_entrega'],
-        'forma_pago' => $_POST ['forma_pago']
+        'vendedor'          => $_POST['vendedor'],
+        'email_vendedor'    => $_POST['email_vendedor'],
+        'division'             => $_POST['division'],
+        'telefono_vendedor' => $_POST['telefono_vendedor'],
+        'cliente'           => $_POST['cliente'],
+        'empresa'           => $_POST['empresa'],
+        'email'             => $_POST['email'],
+        'telefono'          => $_POST['telefono'],
+        'tiempo_entrega'    => $_POST['tiempo_entrega'],
+        'forma_pago'        => $_POST['forma_pago']
     ];
 
     set_client($client);
@@ -477,50 +503,48 @@ function hook_generate_quote(){
         json_output(json_build(400, null, 'No hay conceptos en la cotización'));
     }
 
-    $module = MODULES.'pdf_template';
+    $module = MODULES . 'pdf_template';
     $html = get_module($module, $quote);
-    $filename = 'coti_'.$quote['empresa'].'_'.date('d-m-y').'_'.$quote['number'];
-    $download = sprintf(URL.'pdf.php?number=%s', $quote['number']);
+    $filename = 'coti_' . $quote['empresa'] . '_' . date('d-m-y') . '_' . $quote['number'];
+    $download = sprintf(URL . 'pdf.php?number=%s', $quote['number']);
     $quote['url'] = $download;
 
     //* generar pdf y guardar en el servidor
-    if (!generate_pdf(UPLOADS.$filename, $html)) {
+    if (!generate_pdf(UPLOADS . $filename, $html)) {
         json_output(json_build(400, null, 'Hubo un problema al generar la corización.'));
     }
 
     json_output(json_build(200, $quote, 'Cotización generada con éxito.'));
 }
 
-  function generate_pdf($filename = null, $html, $save_to_file = true){
-      //nombre del archivo
-      $filename= $filename === null ? time(). '.pdf' : $filename.'.pdf';
+function generate_pdf($filename = null, $html, $save_to_file = true)
+{
+    //nombre del archivo
+    $filename = $filename === null ? time() . '.pdf' : $filename . '.pdf';
 
-      
-      $pdf = new Dompdf();
-      $pdf-> set_option('isRemoteEnabled', TRUE);
-      $pdf -> setPaper('A4');
-      $pdf-> loadHtml($html);
-        $pdf->render();
 
-        if($save_to_file){
-            $output = $pdf -> output();
-            file_put_contents($filename, $output);
-            return true;
-        }
-        $pdf->stream($filename);
+    $pdf = new Dompdf();
+    $pdf->set_option('isRemoteEnabled', TRUE);
+    $pdf->setPaper('A4');
+    $pdf->loadHtml($html);
+    $pdf->render();
+
+    if ($save_to_file) {
+        $output = $pdf->output();
+        file_put_contents($filename, $output);
         return true;
     }
+    $pdf->stream($filename);
+    return true;
+}
 
-    function get_all_quotes(){
-        return $quotes = glob(UPLOADS.'coti_*.pdf');
-    }
+function get_all_quotes()
+{
+    return $quotes = glob(UPLOADS . 'coti_*.pdf');
+}
 
-    function redirect($route){
-        header(sprintf('Location: %s', $route));
-        exit;
-    }
-
-    
-
-
-    
+function redirect($route)
+{
+    header(sprintf('Location: %s', $route));
+    exit;
+}
