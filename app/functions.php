@@ -71,8 +71,8 @@ function get_quote()
                 'number'         => rand(111111, 999999),
                 'vendedor'       => '',
                 'email_vendedor' => '',
-                'division'         => '',
-                'telefono_vendedor'       => '',
+                'division'       => '',
+                'telefono_vendedor' => '',
                 'cliente'        => '',
                 'empresa'        => '',
                 'email'          => '',
@@ -82,6 +82,9 @@ function get_quote()
                 'telefono'       => '',
                 'tax'            => 0,
                 'subtotal'       => 0,
+                'itbms'          => 0,
+                'descuento'      => 0,
+                'des'            => 0,   
                 'total'          => 0
             ];
     }
@@ -107,8 +110,8 @@ function set_client($client)
 }
 
 function recalculate_quote()
-{
-
+{   
+    $des = $_SESSION['new_quote']['des'];
     $items    = [];
     $subtotal = 0;
     $tax      = 0;
@@ -128,12 +131,15 @@ function recalculate_quote()
             $tax      += $item['tax'];
         }
     }
-
-    $total = $subtotal + $tax;
+    $total = ($subtotal + $tax);
+    $des   = $total * ($des / 100);
+    $total = $total - $des;
+    
 
     $_SESSION['new_quote']['subtotal'] = $subtotal;
     $_SESSION['new_quote']['tax']      = $tax;
     $_SESSION['new_quote']['total']    = $total;
+    $_SESSION['new_quote']['descuento'] = $des;
 
     return true;
 }
@@ -143,21 +149,24 @@ function restart_quote()
 {
     $_SESSION['new_quote'] =
         [
-            'number'         => rand(111111, 999999),
-            'vendedor'       => '',
-            'email_vendedor' => '',
-            'division' => '',
+            'number'             => rand(111111, 999999),
+            'vendedor'           => '',
+            'email_vendedor'     => '',
+            'division'           => '',
             'telefono_vendedor'  => '',
-            'cliente'        => '',
-            'empresa'        => '',
-            'email'          => '',
-            'items'          => [],
-            'tiempo_entrega' => '',
-            'forma_pago'     => '',
-            'telefono'       => '',
-            'tax'            => 0,
-            'subtotal'       => 0,
-            'total'          => 0
+            'cliente'            => '',
+            'empresa'            => '',
+            'email'              => '',
+            'items'              => [],
+            'tiempo_entrega'     => '',
+            'forma_pago'         => '',
+            'telefono'           => '',
+            'tax'                => 0,
+            'subtotal'           => 0,
+            'itbms'              => 0,
+            'descuento'          => 0,
+            'des'                => 0, 
+            'total'              => 0
         ];
     return true;
 }
@@ -250,6 +259,14 @@ function add_item($item)
 
     //! No existe en la lista, se agrega simplemente
     $_SESSION['new_quote']['items'][] = $item;
+    return true;
+}
+
+
+function add_tax($parametros){
+    $_SESSION['new_quote']['itbms']          = trim($parametros['itbms']);
+    $_SESSION['new_quote']['descuento']      = trim($parametros['descuento']);
+    $_SESSION['new_quote']['des']            = trim($parametros['descuento']);
     return true;
 }
 
@@ -354,6 +371,24 @@ function hook_get_quote_res()
     json_output(json_build(200, ['quote' => $quote, 'html' => $html]));
 }
 
+
+//? Agregar descuento y itbms
+function hook_add_tax(){
+    if (!isset($_POST['itbms'], $_POST['descuento'])) {
+        json_output(json_build(403, null, 'Parametros incompletos.'));
+    }
+
+    $itbms                   = (int)($_POST['itbms']);
+    $descuento               = (int)($_POST['descuento']);
+    
+    $parametros = [
+        'itbms' => $itbms,
+        'descuento' => $descuento
+    ];
+
+    add_tax($parametros);
+}
+
 //? Agregar un producto */
 function hook_add_to_quote()
 {
@@ -361,6 +396,8 @@ function hook_add_to_quote()
     if (!isset($_POST['cod_barras'], $_POST['modelo'], $_POST['descripcion'], $_POST['cantidad'], $_POST['precio_unitario'], $_POST['imagen'])) {
         json_output(json_build(403, null, 'Parametros incompletos.'));
     }
+
+    $quote = get_quote();
     $cod_barras         = (int)($_POST['cod_barras']);
     $modelo             = trim($_POST['modelo']);
     $descripcion        = trim($_POST['descripcion']);
@@ -368,7 +405,7 @@ function hook_add_to_quote()
     $precio_unitario    = (float) str_replace([',', '$'], '', $_POST['precio_unitario']);
     $imagen             = ($_POST['imagen']);
     $subtotal           = (float) $precio_unitario * $cantidad;
-    $tax                = (float) $subtotal * (TAX_RATE / 100);
+    $tax                = (float) $subtotal * ($quote['itbms'] / 100);
 
     $item =
         [
@@ -437,7 +474,7 @@ function hook_save_model()
     if (!isset($_POST['cod_barras'], $_POST['id_model'], $_POST['modelo'], $_POST['descripcion'], $_POST['cantidad'], $_POST['precio_unitario'])) {
         json_output(json_build(403, null, 'Parametros incompletos.'));
     }
-
+    $quote = get_quote();
     $id                 = (int) $_POST['id_model'];
     $cod_barras         = (int)($_POST['cod_barras']);
     $modelo             = trim($_POST['modelo']);
@@ -446,19 +483,19 @@ function hook_save_model()
     $precio_unitario    = (float) str_replace([',', '$'], '', $_POST['precio_unitario']);
     $imagen             = ($_POST['imagen']);
     $subtotal           = (float) $precio_unitario * $cantidad;
-    $tax                = (float) $subtotal * (TAX_RATE / 100);
-
+    $tax                = (float) $subtotal * ($quote['itbms'] / 100);
+    
     $item =
-        [
-            'id'                 => $id,
-            'cod_barras'         => $cod_barras,
-            'modelo'             => $modelo,
-            'descripcion'        => $descripcion,
-            'cantidad'           => $cantidad,
-            'precio_unitario'    => $precio_unitario,
-            'imagen'             => $imagen,
-            'tax'                => $tax,
-            'total'              => $subtotal
+    [
+        'id'                 => $id,
+        'cod_barras'         => $cod_barras,
+        'modelo'             => $modelo,
+        'descripcion'        => $descripcion,
+        'cantidad'           => $cantidad,
+        'precio_unitario'    => $precio_unitario,
+        'imagen'             => $imagen,
+        'tax'                => $tax,
+        'total'              => $subtotal
         ];
 
     if (!add_item($item)) {
@@ -483,7 +520,7 @@ function hook_generate_quote()
     $client = [
         'vendedor'          => $_POST['vendedor'],
         'email_vendedor'    => $_POST['email_vendedor'],
-        'division'             => $_POST['division'],
+        'division'          => $_POST['division'],
         'telefono_vendedor' => $_POST['telefono_vendedor'],
         'cliente'           => $_POST['cliente'],
         'empresa'           => $_POST['empresa'],

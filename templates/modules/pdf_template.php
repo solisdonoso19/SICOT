@@ -56,10 +56,16 @@
 <body>
     <div class="contenedor" style="text-align: center;">
         <!-- //? Cabezera -->
-        <img src="<?php echo IMG . 'logo.png' ?>" alt="" style="margin-left: center; margin-right: auto; width: 100px; height: 70px;">
+        <?php if ($d->division === 'SEMFYL S.A.') { ?>
+            <img src="<?php echo IMG . 'logo.png' ?>" alt="" style="margin-left: center; margin-right: auto; width: 100px; height: 70px;">
+        <?php } ?>
         <h4 style="text-align:center; padding: 0; margin: 0;"><strong><?php echo $d->division ?></strong></h4>
-        <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;" ; padding: 0; margin: 0;>R.U.C 1719593-690057 D.V. 59</p>
-        <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;">Ricardi J. Alfaro</p>
+        <?php if ($d->division === 'SEMFYL S.A.') { ?>   
+            <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;" ; padding: 0; margin: 0;>R.U.C 30773-0073-240340  D.V 8</p>
+        <?php }else{ ?>
+        <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;" ; padding: 0; margin: 0;>R.U.C1719593-1-690057  D.V 59</p>
+        <?php } ?>
+        <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;">Ricardo J. Alfaro</p>
         <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;">Teléfono: 294-6252</p>
         <p style="text-align:center; font-size: 10px; padding: 0; margin: 0;">FAX: 230-3869</p>
         <table style="width: 100%;">
@@ -181,6 +187,11 @@
                 </tr>
                 <tr>
                     <td colspan="5"></td>
+                    <td align="right">Descuento</td>
+                    <td align="right"><?php echo number_format($d->descuento, 2) ?></td>
+                </tr>
+                <tr>
+                    <td colspan="5"></td>
                     <td align="right">
                         <h1>Total</h1>
                     </td>
@@ -189,7 +200,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="7" align="right" style="color: grey;"><b>Impuestos incluidos (7%)</b></td>
+                    <td colspan="7" align="right" style="color: grey;"><b>
+                            <p class="text-end text-secondary"><b>Impuestos incluidos (<?php $quote = get_quote();
+                                                                                        echo $quote['itbms'] ?>%)</b></p>
+                            <p class="text-end text-secondary"><b>Descuento incluidos (<?php echo $quote['des'] ?>%)</b>
+                            </p>
+                        </b></td>
                 </tr>
             </tfoot>
         </table>
@@ -200,10 +216,12 @@
         <p>*Estimados Clientes: en vista del oleaje de cheques falsificados, anunciado en los medios de comunicación le informamos <br>que toda compra realizada por medio de cheque, debera esperar a que el banco compense el cheque para la entrega de mercancia <br> (Siete(7) dias habiles laborables luego de que se haya efectuado el deposito al banco.)</p>
         <p><strong>*ENTREGAS A 36 HORAS LABORABLES DESPUES DE FACTURAR Y CANCELAR*<br>*TODA ENTREGA TENDRA UN COSTO DE FLETE DEPENDIENDO DEL LUGAR DE ENTREGA</strong></p>
         <p>*No se aceptan copias de <strong>SLIP DE DEPOSITO</strong> para efectuar compras</p>
+        <?php if ($d->division === 'DIPSA S.A.'){?>
         <p>*Para su compra puede realizar pagos en efectivo, tarjetas o ACH a la cuenta corriente de Banco General de: DIPSA, S.A. 03-29-01-070626-6</p>
+        <?php }?>
         <hr>
         <p>Esta cotización de nuestros productos es válida por 7 dias.</p>
-        <p>Horario de atención: Lunes a Viernes de 9:00 AM a 5:00 PM y Sabados de 9:00 AM a 2:30 PM. </p>
+        <p>Horario de atención: Lunes a Viernes de 8:00 AM a 4:00 PM y Sabados de 8:00 AM a 2:30 PM. </p>
     </footer>
 
 </body>

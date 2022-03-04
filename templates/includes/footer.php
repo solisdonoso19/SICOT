@@ -21,6 +21,8 @@
 <script src="<?php echo JS . 'waitMe.min.js'; ?>"></script>
 
 <script src="<?php echo JS . 'main.js'; ?>"></script>
+
+<script type="text/javascript">alert('PROCURE NO RECARGAR LA PAGINA DURANTE LA REALIZACION DE LA COTIZACION!')</script>
 </body>
 
 </html>

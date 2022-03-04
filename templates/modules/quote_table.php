@@ -43,7 +43,11 @@
                 </tr>
                 <tr>
                     <td class="text-end text-primary" colspan="7"><b>I.T.B.M.S</b></td>
-                    <td class="text-end text-primary"><b><?php echo '$' . number_format($item->tax, 2); ?></b></td>
+                    <td class="text-end text-primary"><b><?php echo '$' . number_format($d->tax, 2); ?></b></td>
+                </tr>
+                <tr>
+                    <td class="text-end text-primary" colspan="7"><b>Descuento</b></td>
+                    <td class="text-end text-primary"><b><?php echo '$' . number_format($d->descuento, 2); ?></b></td>
                 </tr>
                 <tr>
                     <td class="text-end" colspan="8"><b>TOTAL</b>
@@ -52,6 +56,7 @@
                 </tr>
             </tbody>
         </table>
-        <p class="text-end text-secondary"><b>Impuestos incluidos (7%)</b></p>
+        <p class="text-end text-secondary"><b>Impuestos incluidos (<?php $quote=get_quote(); echo $quote['itbms'] ?>%)</b></p>
+        <p class="text-end text-secondary"><b>Descuento incluidos (<?php echo $quote['des'] ?>%)</b></p>
     </div>
 <?php endif; ?>

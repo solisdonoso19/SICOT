@@ -7,6 +7,8 @@ p {
 }
 body {
   background-color: #eaeaea;
+  margin: 0;
+  margin-bottom: 80px;
 }
 
 /** Navbar **/
@@ -29,6 +31,9 @@ footer {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
     rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
   color: #274e8c;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
 }
 
 footer > a {
@@ -54,4 +59,10 @@ footer > div > p > span > a {
 footer > div > p > span > a:hover,
 footer > a:hover {
   color: #8099c2;
+}
+
+/**poscicionando el footer siempre al pie de la pagina*/
+html {
+  min-height: 100%;
+  position: relative;
 }

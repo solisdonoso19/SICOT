@@ -1,4 +1,5 @@
 $("document").ready(() => {
+  
   //* Función para generar una notificación
   function notify(content, type = "success") {
     let wrapper = $(".wrapper_notifications"),
@@ -152,6 +153,71 @@ $("document").ready(() => {
       });
   }
 
+  $("#add_tax").on("submit", add_tax);
+  function add_tax(e) {
+    e.preventDefault();
+    let form = $("#add_tax"),
+      action = "add_tax",
+      data = new FormData(form.get(0)),
+      wrapper_vendedor = $(".wrapper_vendedor"),
+      wrapper_cliente  = $(".wrapper_cliente"),
+      wrapper_producto = $(".wrapper_producto"),
+      wrapper_detalles = $('.wrapper_detalles'),
+      errors = 0;
+
+    // Agregar la acción al objeto data
+    data.append("action", action);
+
+    // Validar el concepto
+    let descuento = parseFloat($("#descuento").val());
+
+    // Validar el precio
+    if (descuento < 0) {
+      notify("Por favor ingresa un numero valido", "danger");
+      errors++;
+    }
+
+    if (errors > 0) {
+      notify("Completa el formulario.", "danger");
+      return false;
+    }
+
+    $.ajax({
+      url: "ajax.php",
+      type: "POST",
+      dataType: "json",
+      cache: false,
+      processData: false,
+      contentType: false,
+      data: data,
+      beforeSend: () => {
+        form.waitMe();
+      },
+    })
+      .done((res) => {
+        if (res.status === 200) {
+         
+          notify(res.msg,);
+          form.trigger("reset");
+        } else {
+          notify(res.msg, "danger");
+        }
+      })
+      .fail((err) => {
+        notify("Comenzando...", "success");
+        wrapper_detalles.fadeOut();
+        wrapper_vendedor.fadeIn();
+        wrapper_cliente.fadeIn();
+        wrapper_producto.fadeIn();
+
+        form.trigger("reset");
+      })
+      .always(() => {
+        form.waitMe("hide");
+      });
+  }
+
+
   //* Funcion para reiniciar cotizacion
   $(".restart_quote").on("click", restart_quote);
   function restart_quote(e) {
@@ -178,6 +244,7 @@ $("document").ready(() => {
           generate.html(default_text);
           notify(res.msg);
           get_quote();
+          document.location.reload();
         } else {
           notify(res.msg, "danger");
         }
@@ -349,7 +416,6 @@ $("document").ready(() => {
       default_text      = button.html(), // "Generar"
       new_text          = "Volver a generar",
       download          = $("#download_quote"),
-      send              = $("#send_quote"),
       vendedor          = $('#vendedor').val(),
       email_vendedor    = $('#email_vendedor').val(),
       division          = $('#division').val(),
@@ -424,15 +490,11 @@ $("document").ready(() => {
           notify(res.msg);
           download.attr("href", res.data.url);
           download.fadeIn();
-          send.attr("data-number", res.data.number);
-          send.fadeIn();
           button.html(new_text);
         } else {
           notify(res.msg, "danger");
           download.attr("href", "");
           download.fadeOut();
-          send.attr("data-number", "");
-          send.fadeOut();
           button.html("Reintentar");
         }
       })
